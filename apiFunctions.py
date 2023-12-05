@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 
 from apiConnection import get_data
@@ -11,8 +13,10 @@ nbaList = ['player_points_rebounds_assists']
 nflList = ['player_pass_yds','player_rush_yds','player_reception_yds']
 sportIds = ['basketball_nba']
 
+if len(sys.argv)==2:
+    apiKey = sys.argv[1]
 def getEventIds(sport):
-    eventIdList = f"https://api.the-odds-api.com/v4/sports/{sport}/odds/?apiKey=1c439d60b8f404cd0d45fea3debdfb32&regions=us&markets=h2h,spreads&oddsFormat=american"
+    eventIdList = f"https://api.the-odds-api.com/v4/sports/{sport}/odds/?apiKey={apiKey}&regions=us&markets=h2h,spreads&oddsFormat=american"
     return get_data(eventIdList)
 
 
@@ -22,7 +26,7 @@ def getOdds(sport,statType):
     result_dict = getEventIds(sport)
     for value in result_dict:
         eventId = value['id']
-        stringValue = f"https://api.the-odds-api.com/v4/sports/{sport}/events/{eventId}/odds?apiKey=1c439d60b8f404cd0d45fea3debdfb32&regions=us&markets={statType}&oddsFormat=american&bookmaker=fanduel"
+        stringValue = f"https://api.the-odds-api.com/v4/sports/{sport}/events/{eventId}/odds?apiKey={apiKey}&regions=us&markets={statType}&oddsFormat=american&bookmaker=fanduel"
         result_dict = get_data(stringValue)
         game_name = result_dict['home_team'] + ' vs ' + result_dict['away_team']
         game_date = result_dict['commence_time']
